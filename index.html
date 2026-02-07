@@ -10,18 +10,17 @@
     
     <meta property="og:title" content="For Hannah 💖">
     <meta property="og:description" content="A digital universe created just for you.">
-    
     <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🐱</text></svg>">
 
     <style>
         /* =========================================
-           1. VARIABLES & THEME SETUP
+           1. VARIABLES & THEME
            ========================================= */
         :root {
-            --primary-hue: 340; /* Pinkish Red */
+            --primary-hue: 340;
             --bg-light: #fff0f5;
             --bg-dark: #2d1b21;
-            --glass-white: rgba(255, 255, 255, 0.7);
+            --glass-white: rgba(255, 255, 255, 0.85); /* Slightly more opaque for mobile readabilty */
             --glass-border: rgba(255, 255, 255, 0.4);
             --text-main: #5c3a45;
             --text-highlight: #d6336c;
@@ -33,10 +32,9 @@
             --transition-speed: 0.4s;
         }
 
-        /* Dark Mode Variables */
         body.dark-mode {
             --bg-light: #1a1014;
-            --glass-white: rgba(30, 30, 30, 0.6);
+            --glass-white: rgba(30, 30, 30, 0.85);
             --glass-border: rgba(255, 255, 255, 0.1);
             --text-main: #ffdeeb;
             --text-highlight: #ff8787;
@@ -45,9 +43,6 @@
             color: var(--text-main);
         }
 
-        /* =========================================
-           2. GLOBAL RESET & BASE STYLES
-           ========================================= */
         * { box-sizing: border-box; margin: 0; padding: 0; }
         body {
             font-family: var(--font-body);
@@ -57,22 +52,14 @@
             transition: background-color var(--transition-speed), color var(--transition-speed);
         }
 
-        /* Scrollbar beautification */
         ::-webkit-scrollbar { width: 8px; }
         ::-webkit-scrollbar-track { background: transparent; }
         ::-webkit-scrollbar-thumb { background: var(--accent); border-radius: 10px; }
 
-        /* The Canvas Background */
-        #world {
-            position: fixed;
-            top: 0; left: 0;
-            width: 100vw; height: 100vh;
-            z-index: -1;
-            pointer-events: none;
-        }
+        #world { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; z-index: -1; pointer-events: none; }
 
         /* =========================================
-           3. NAVIGATION (GLASSMORPHISM)
+           2. RESPONSIVE NAVIGATION
            ========================================= */
         .glass-nav {
             position: fixed;
@@ -86,35 +73,39 @@
             -webkit-backdrop-filter: blur(16px);
             border: 1px solid var(--glass-border);
             border-radius: 50px;
-            padding: 15px 30px;
+            padding: 10px 25px;
             display: flex;
             justify-content: space-between;
             align-items: center;
             box-shadow: var(--shadow-soft);
             z-index: 100;
+            transition: all 0.3s ease;
         }
 
-        .logo { font-family: var(--font-heading); font-size: 1.5rem; color: var(--text-highlight); }
-        .nav-links { list-style: none; display: flex; gap: 20px; }
-        .nav-links li { cursor: pointer; transition: color 0.3s; font-weight: 600; }
+        .logo { font-family: var(--font-heading); font-size: 1.5rem; color: var(--text-highlight); flex-shrink: 0; }
+        
+        .nav-links { 
+            list-style: none; 
+            display: flex; 
+            gap: 20px; 
+            margin: 0 20px;
+        }
+        
+        .nav-links li { 
+            cursor: pointer; 
+            transition: color 0.3s; 
+            font-weight: 600; 
+            white-space: nowrap; 
+        }
+        
         .nav-links li:hover, .nav-links li.active { color: var(--text-highlight); }
-        .nav-links li.active { position: relative; }
-        .nav-links li.active::after {
-            content: ''; position: absolute; bottom: -5px; left: 0; width: 100%; height: 3px;
-            background: var(--text-highlight); border-radius: 2px;
-        }
-        .theme-toggle { background: none; border: none; font-size: 1.2rem; cursor: pointer; }
-
-        /* Mobile Nav Handling */
-        @media (max-width: 768px) {
-            .nav-links { display: none; }
-            .glass-nav { justify-content: center; }
-        }
+        .theme-toggle { background: none; border: none; font-size: 1.2rem; cursor: pointer; flex-shrink: 0; }
 
         /* =========================================
-           4. SPA VIEWS & TRANSITIONS
+           3. MAIN LAYOUT & SECTIONS
            ========================================= */
         main { padding-top: 100px; min-height: 100vh; }
+        
         .view {
             display: none;
             opacity: 0;
@@ -123,169 +114,82 @@
             padding: 20px;
             max-width: 1200px;
             margin: 0 auto;
+            width: 100%;
         }
-        .view.active-view {
-            display: block;
-            opacity: 1;
-            transform: translateY(0);
-        }
+        .view.active-view { display: block; opacity: 1; transform: translateY(0); }
 
-        /* =========================================
-           5. HERO SECTION STYLES
-           ========================================= */
+        /* Hero */
         .hero-content {
             text-align: center;
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            height: 80vh;
+            min-height: 80vh; /* Changed to min-height for mobile scroll */
+            padding: 20px;
         }
-        .hero-cat-svg {
-            width: 300px;
-            height: 300px;
-            filter: drop-shadow(0 10px 10px rgba(0,0,0,0.1));
-        }
-        .title-anim { font-family: var(--font-heading); font-size: 4rem; color: var(--text-highlight); margin: 20px 0; }
+        .hero-cat-svg { width: 300px; height: 300px; filter: drop-shadow(0 10px 10px rgba(0,0,0,0.1)); max-width: 100%; }
+        .title-anim { font-family: var(--font-heading); font-size: 4rem; color: var(--text-highlight); margin: 20px 0; line-height: 1.2; }
         .subtitle-anim { font-size: 1.2rem; max-width: 600px; margin-bottom: 30px; }
 
         .cta-btn {
-            padding: 15px 40px;
-            font-size: 1.2rem;
+            padding: 15px 40px; font-size: 1.2rem;
             background: linear-gradient(45deg, #ff9a9e 0%, #fad0c4 99%, #fad0c4 100%);
-            border: none;
-            border-radius: 50px;
-            color: white;
-            font-weight: bold;
-            cursor: pointer;
-            box-shadow: 0 10px 20px rgba(255, 154, 158, 0.4);
-            transition: transform 0.2s;
+            border: none; border-radius: 50px; color: white; font-weight: bold; cursor: pointer;
+            box-shadow: 0 10px 20px rgba(255, 154, 158, 0.4); transition: transform 0.2s;
         }
         .cta-btn:hover { transform: scale(1.05); }
 
+        /* Animations */
         @keyframes float { 0% { transform: translateY(0px); } 50% { transform: translateY(-15px); } 100% { transform: translateY(0px); } }
         .floating-cat-hero { animation: float 4s ease-in-out infinite; }
         @keyframes beat { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.1); } }
         .beating-heart { transform-origin: center; animation: beat 1.5s infinite; }
 
         /* =========================================
-           6. MEMORIES (TIMELINE)
+           4. TIMELINE (DESKTOP DEFAULT)
            ========================================= */
-        .timeline-container {
-            position: relative;
-            max-width: 800px;
-            margin: 50px auto;
-            padding: 20px 0;
-        }
+        .timeline-container { position: relative; max-width: 800px; margin: 50px auto; padding: 20px 0; }
         .timeline-container::after {
-            content: '';
-            position: absolute;
-            width: 4px;
-            background-color: var(--accent);
-            top: 0; bottom: 0; left: 50%;
-            margin-left: -2px;
-            border-radius: 2px;
+            content: ''; position: absolute; width: 4px; background-color: var(--accent);
+            top: 0; bottom: 0; left: 50%; margin-left: -2px; border-radius: 2px;
         }
-        .timeline-item {
-            padding: 10px 40px;
-            position: relative;
-            background-color: inherit;
-            width: 50%;
-        }
+        .timeline-item { padding: 10px 40px; position: relative; background-color: inherit; width: 50%; }
         .timeline-item.left { left: 0; }
         .timeline-item.right { left: 50%; }
-
+        
+        /* The Dots */
         .timeline-item::after {
-            content: '🐾';
-            position: absolute;
-            width: 30px; height: 30px;
-            right: -15px; background-color: white;
-            border: 4px solid var(--accent);
+            content: '🐾'; position: absolute; width: 30px; height: 30px;
+            right: -15px; background-color: white; border: 4px solid var(--accent);
             top: 15px; border-radius: 50%; z-index: 1;
             display: flex; align-items: center; justify-content: center; font-size: 12px;
         }
         .right::after { left: -15px; }
 
         .timeline-item .content {
-            padding: 20px 30px;
-            background: var(--glass-white);
-            border-radius: 15px;
-            box-shadow: var(--shadow-soft);
-            border: 1px solid var(--glass-border);
+            padding: 20px 30px; background: var(--glass-white); border-radius: 15px;
+            box-shadow: var(--shadow-soft); border: 1px solid var(--glass-border);
         }
-
-        /* --- THIS IS THE NEW CODE FOR YOUR IMAGES --- */
         .memory-img {
-            width: 100%;           /* Forces image to fit the container width */
-            height: 200px;         /* Sets a fixed height so all images look even */
-            object-fit: cover;     /* Crops the image so it doesn't look squashed/stretched */
-            border-radius: 10px;   /* Rounds the corners */
-            display: block;
-            margin: 10px 0;
+            width: 100%; height: 200px; object-fit: cover; border-radius: 10px;
+            display: block; margin: 10px 0;
         }
 
-        /* =========================================
-           7. REASONS GRID
-           ========================================= */
+        /* Reasons Grid */
         .grid-container {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-            gap: 20px;
-            padding: 20px;
+            display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 20px; padding: 20px 0;
         }
         .reason-card {
-            background: var(--glass-white);
-            padding: 20px;
-            border-radius: 15px;
-            text-align: center;
-            border: 1px solid var(--glass-border);
-            transition: transform 0.3s;
+            background: var(--glass-white); padding: 20px; border-radius: 15px;
+            text-align: center; border: 1px solid var(--glass-border); transition: transform 0.3s;
         }
         .reason-card:hover { transform: translateY(-5px); }
         .icon-box { font-size: 2rem; margin-bottom: 10px; }
         .reason-title { color: var(--text-highlight); margin-bottom: 5px; }
 
-        /* =========================================
-           8. INTERACTIVE ELEMENTS
-           ========================================= */
-        #loader {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: #fff0f5; z-index: 9999;
-            display: flex; align-items: center; justify-content: center;
-            transition: opacity 1s;
-        }
-        .loader-content { text-align: center; }
-        .heart-loader { width: 50px; animation: beat 0.8s infinite; }
-
-        #music-player {
-            position: fixed; bottom: 20px; right: 20px;
-            background: var(--glass-white);
-            backdrop-filter: blur(10px);
-            padding: 15px;
-            border-radius: 20px;
-            box-shadow: var(--shadow-deep);
-            display: flex; gap: 15px; align-items: center;
-            border: 1px solid var(--glass-border); z-index: 500;
-        }
-        .disc {
-            width: 40px; height: 40px; background: #333; border-radius: 50%;
-            animation: spin 3s linear infinite; animation-play-state: paused;
-            position: relative;
-        }
-        .disc-center {
-            width: 10px; height: 10px; background: #fff; border-radius: 50%;
-            position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
-        }
-        .disc.playing { animation-play-state: running; }
-        @keyframes spin { 100% { transform: rotate(360deg); } }
-
-        button#btn-play {
-            background: none; border: none; font-size: 1.5rem; cursor: pointer; color: var(--text-highlight);
-        }
-
-        /* =========================================
-           9. GAME STYLES
-           ========================================= */
+        /* Game & Letter */
         .game-ui { text-align: center; }
         .game-area {
             width: 100%; max-width: 600px; height: 400px; margin: 20px auto;
@@ -300,29 +204,86 @@
             padding: 15px 30px; font-size: 1.2rem; background: var(--accent); border: none;
             color: white; border-radius: 30px; cursor: pointer;
         }
-
-        /* =========================================
-           10. LETTER ENVELOPE
-           ========================================= */
         .envelope-container { perspective: 1000px; display: flex; justify-content: center; flex-direction: column; align-items: center; margin-top: 50px; }
         .envelope {
             width: 300px; height: 200px; background: #ff6b81; position: relative;
             transform-style: preserve-3d; transition: transform 0.6s;
             cursor: pointer; margin-bottom: 20px;
-            display: flex; align-items: center; justify-content: center;
-            color: white; font-weight: bold;
+            display: flex; align-items: center; justify-content: center; color: white; font-weight: bold;
         }
         .letter-content {
-            background: #fff; width: 80%; max-width: 600px; min-height: 400px;
-            padding: 40px; border-radius: 5px; box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            background: #fff; width: 90%; max-width: 600px; min-height: 400px;
+            padding: 30px; border-radius: 5px; box-shadow: 0 10px 30px rgba(0,0,0,0.2);
             font-family: 'Dancing Script', cursive; font-size: 1.5rem; line-height: 1.6;
-            display: none; /* Hidden until unlocked */
-            background-image: linear-gradient(#eee .1rem, transparent .1rem);
-            background-size: 100% 2rem;
-            margin: 0 auto;
+            display: none; background-image: linear-gradient(#eee .1rem, transparent .1rem);
+            background-size: 100% 2rem; margin: 0 auto;
         }
-        .lock-message {
-            background: #333; color: #fff; padding: 10px 20px; border-radius: 20px; margin-top: 20px;
+        .lock-message { background: #333; color: #fff; padding: 10px 20px; border-radius: 20px; margin-top: 20px; }
+
+        /* Widgets */
+        #loader {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: #fff0f5; z-index: 9999; display: flex; align-items: center; justify-content: center;
+            transition: opacity 1s;
+        }
+        .heart-loader { width: 50px; animation: beat 0.8s infinite; }
+        
+        #music-player {
+            position: fixed; bottom: 20px; right: 20px;
+            background: var(--glass-white); backdrop-filter: blur(10px);
+            padding: 10px 15px; border-radius: 50px;
+            box-shadow: var(--shadow-deep); display: flex; gap: 10px; align-items: center;
+            border: 1px solid var(--glass-border); z-index: 500;
+        }
+        .disc {
+            width: 30px; height: 30px; background: #333; border-radius: 50%;
+            animation: spin 3s linear infinite; animation-play-state: paused; position: relative;
+        }
+        .disc-center { width: 8px; height: 8px; background: #fff; border-radius: 50%; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); }
+        .disc.playing { animation-play-state: running; }
+        @keyframes spin { 100% { transform: rotate(360deg); } }
+        button#btn-play { background: none; border: none; font-size: 1rem; cursor: pointer; color: var(--text-highlight); font-weight: bold; }
+
+        /* =========================================
+           5. MOBILE OPTIMIZATIONS (CSS MEDIA QUERIES)
+           ========================================= */
+        @media (max-width: 768px) {
+            /* Navbar becomes a scrollable horizontal strip */
+            .glass-nav {
+                width: 95%; top: 10px; padding: 10px;
+                flex-direction: column; gap: 10px;
+            }
+            .nav-links {
+                width: 100%; margin: 0;
+                overflow-x: auto; /* Scrollable */
+                justify-content: flex-start;
+                padding-bottom: 5px; /* Space for scrollbar */
+            }
+            .logo { font-size: 1.2rem; }
+
+            /* Hero Adjustments */
+            .title-anim { font-size: 2.5rem; }
+            .hero-cat-svg { width: 220px; height: 220px; }
+            
+            /* Timeline: Force straight line layout on mobile */
+            .timeline-container::after { left: 30px; } /* Move line to left */
+            .timeline-item {
+                width: 100%;
+                padding-left: 70px; /* Make room for line */
+                padding-right: 25px;
+            }
+            .timeline-item.left, .timeline-item.right { left: 0; }
+            
+            .timeline-item::after {
+                left: 15px; /* Move dot to line */
+                right: auto;
+            }
+
+            /* Game Canvas */
+            .game-area { height: 300px; }
+            
+            /* Music Player Mobile Position */
+            #music-player { bottom: 10px; right: 10px; transform: scale(0.9); }
         }
     </style>
 </head>
@@ -333,7 +294,7 @@
             <svg class="heart-loader" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                 <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z" fill="#ffacc7"/>
             </svg>
-            <p>Loading Hannah's Universe...</p>
+            <p>Loading...</p>
         </div>
     </div>
 
@@ -344,7 +305,7 @@
             </div>
         </div>
         <div class="player-controls">
-            <button id="btn-play">▶ Music</button>
+            <button id="btn-play">▶ Play</button>
         </div>
         <audio id="audio-source" loop>
             <source src="bg-music.mp3" type="audio/mpeg">
@@ -354,13 +315,13 @@
     <canvas id="world"></canvas>
 
     <nav class="glass-nav">
-        <div class="logo">H &hearts;</div>
+        <div class="logo">Hannah's 💖</div>
         <ul class="nav-links">
             <li data-target="home" class="active">Home</li>
             <li data-target="memories">Memories</li>
-            <li data-target="reasons">Why You?</li>
-            <li data-target="game">Surprise Game</li>
-            <li data-target="letter">Love Letter</li>
+            <li data-target="reasons">Why You</li>
+            <li data-target="game">Game</li>
+            <li data-target="letter">Letter</li>
         </ul>
         <button class="theme-toggle">🌙</button>
     </nav>
@@ -434,7 +395,7 @@
         </section>
 
         <section id="reasons" class="view">
-            <h2 class="section-header" style="text-align:center;">100 Reasons (Preview)</h2>
+            <h2 class="section-header" style="text-align:center;">100 Reasons</h2>
             <div class="grid-container" id="reasons-grid-target"></div>
             <template id="reason-card-template">
                 <div class="reason-card">
@@ -447,8 +408,8 @@
 
         <section id="game" class="view">
             <div class="game-ui">
-                <h2>Catch the Hearts! <span id="score">0</span>/10</h2>
-                <p>Help the kitty catch enough love to unlock your letter.</p>
+                <h2>Catch Hearts! <span id="score">0</span>/10</h2>
+                <p>Help the kitty catch love to unlock your letter.</p>
                 <div class="game-area" id="game-canvas-container">
                     <canvas id="game-canvas"></canvas>
                     <div id="game-overlay">
@@ -467,7 +428,7 @@
                     </div>
                 </div>
                 <div class="lock-message" id="lock-msg">
-                    🔒 Complete the Heart Game to open this envelope!
+                    🔒 Win the game to open!
                 </div>
                 <div class="letter-content">
                     <div class="paper">
@@ -490,33 +451,38 @@
     </svg>
 
     <script>
+        // --- STATE ---
         const state = { view: 'home', isDark: false, musicPlaying: false, gameUnlocked: false, score: 0 };
         const views = document.querySelectorAll('.view');
         const navLinks = document.querySelectorAll('.nav-links li');
         const loader = document.getElementById('loader');
 
+        // --- INIT ---
         window.addEventListener('load', () => {
             setTimeout(() => {
                 loader.style.opacity = '0';
                 setTimeout(() => { loader.style.display = 'none'; }, 1000);
                 generateReasons(); 
-            }, 1500);
+            }, 1000);
         });
 
+        // --- NAVIGATION ---
         window.navigateTo = function(targetId) {
             state.view = targetId;
             navLinks.forEach(l => l.classList.remove('active'));
             const activeLink = document.querySelector(`[data-target="${targetId}"]`);
             if(activeLink) activeLink.classList.add('active');
+            
             views.forEach(v => {
                 v.classList.remove('active-view');
-                if(v.id === targetId) { v.classList.add('active-view'); }
+                if(v.id === targetId) v.classList.add('active-view');
             });
             if(targetId === 'game') initGame();
         };
 
         navLinks.forEach(link => { link.addEventListener('click', () => { window.navigateTo(link.getAttribute('data-target')); }); });
 
+        // --- THEME ---
         const themeBtn = document.querySelector('.theme-toggle');
         themeBtn.addEventListener('click', () => {
             state.isDark = !state.isDark;
@@ -524,11 +490,13 @@
             themeBtn.innerText = state.isDark ? '☀️' : '🌙';
         });
 
+        // --- REASONS GENERATOR ---
         function generateReasons() {
             const container = document.getElementById('reasons-grid-target');
             const template = document.getElementById('reason-card-template');
             const adjectives = ["Beautiful", "Kind", "Smart", "Funny", "Sweet", "Loving", "Caring", "Brave"];
             const nouns = ["Smile", "Heart", "Eyes", "Laugh", "Voice", "Soul", "Style", "Hugs"];
+            
             for(let i = 1; i <= 20; i++) {
                 const clone = template.content.cloneNode(true);
                 const adj = adjectives[Math.floor(Math.random() * adjectives.length)];
@@ -540,14 +508,16 @@
             }
         }
 
+        // --- AUDIO ---
         const audio = document.getElementById('audio-source');
         const btnPlay = document.getElementById('btn-play');
         const disc = document.querySelector('.disc');
+        
         btnPlay.addEventListener('click', () => {
             if(state.musicPlaying) {
                 audio.pause();
                 disc.classList.remove('playing');
-                btnPlay.innerText = "▶ Music";
+                btnPlay.innerText = "▶ Play";
             } else {
                 audio.play().catch(e => alert("Please interact with the page first!"));
                 disc.classList.add('playing');
@@ -556,10 +526,11 @@
             state.musicPlaying = !state.musicPlaying;
         });
 
+        // --- BACKGROUND PHYSICS ---
         const canvas = document.getElementById('world');
         const ctx = canvas.getContext('2d');
-        let width, height;
-        let particles = [];
+        let width, height, particles = [];
+        
         function resize() { width = canvas.width = window.innerWidth; height = canvas.height = window.innerHeight; }
         window.addEventListener('resize', resize);
         resize();
@@ -578,24 +549,42 @@
         function animateParticles() { ctx.clearRect(0, 0, width, height); particles.forEach(p => { p.update(); p.draw(); }); requestAnimationFrame(animateParticles); }
         initParticles(); animateParticles();
 
+        // --- GAME ---
         const gameCanvas = document.getElementById('game-canvas');
         const gCtx = gameCanvas.getContext('2d');
         let gameLoopId, gameItems = [], catcher = { x: 150, y: 0, width: 50, height: 50 };
+        
         function initGame() {
             const container = document.getElementById('game-canvas-container');
-            gameCanvas.width = container.offsetWidth; gameCanvas.height = 400; 
+            gameCanvas.width = container.offsetWidth; gameCanvas.height = container.offsetHeight || 400; 
             catcher.y = gameCanvas.height - 60; catcher.x = gameCanvas.width / 2;
-            gameCanvas.addEventListener('mousemove', (e) => { const rect = gameCanvas.getBoundingClientRect(); catcher.x = e.clientX - rect.left - catcher.width/2; });
+            
+            // Mouse & Touch support
+            const moveHandler = (clientX) => {
+                const rect = gameCanvas.getBoundingClientRect();
+                catcher.x = clientX - rect.left - catcher.width/2;
+            };
+            
+            gameCanvas.addEventListener('mousemove', (e) => moveHandler(e.clientX));
+            gameCanvas.addEventListener('touchmove', (e) => {
+                e.preventDefault();
+                moveHandler(e.touches[0].clientX);
+            }, { passive: false });
+            
             document.getElementById('start-game-btn').onclick = startGameLoop;
         }
+        
         function startGameLoop() { document.getElementById('game-overlay').style.display = 'none'; state.score = 0; document.getElementById('score').innerText = '0'; gameItems = []; spawnItem(); updateGame(); }
         function spawnItem() { gameItems.push({ x: Math.random() * (gameCanvas.width - 30), y: -30, speed: Math.random() * 3 + 2, type: '❤️' }); if(state.score < 10) setTimeout(spawnItem, 1000); }
+        
         function updateGame() {
             gCtx.clearRect(0, 0, gameCanvas.width, gameCanvas.height);
             gCtx.font = "40px Arial"; gCtx.fillText("🐱", catcher.x, catcher.y + 40);
+            
             for(let i=0; i<gameItems.length; i++) {
                 let item = gameItems[i]; item.y += item.speed;
                 gCtx.font = "30px Arial"; gCtx.fillText(item.type, item.x, item.y);
+                
                 if(item.y > catcher.y && item.y < catcher.y + catcher.height && item.x > catcher.x && item.x < catcher.x + catcher.width) {
                     state.score++; document.getElementById('score').innerText = state.score; gameItems.splice(i, 1); i--;
                     if(state.score >= 10) winGame();
@@ -603,13 +592,16 @@
             }
             if(state.score < 10) gameLoopId = requestAnimationFrame(updateGame);
         }
+        
         function winGame() {
             cancelAnimationFrame(gameLoopId);
             gCtx.fillStyle = "rgba(255, 255, 255, 0.9)"; gCtx.fillRect(0,0, gameCanvas.width, gameCanvas.height);
-            gCtx.fillStyle = "#d6336c"; gCtx.font = "30px Arial"; gCtx.fillText("You Won! Letter Unlocked!", 50, 200);
+            gCtx.fillStyle = "#d6336c"; gCtx.font = "30px Arial"; gCtx.fillText("You Won!", 50, 200);
             document.getElementById('lock-msg').style.display = 'none'; document.getElementById('envelope').style.display = 'none'; document.querySelector('.letter-content').style.display = 'block';
             setTimeout(() => { window.navigateTo('letter'); typeLetter(); }, 2000);
         }
+
+        // --- LETTER ---
         const letterText = "My Dearest Hannah,\n\nIf you are reading this, you caught all the love I sent your way. I wanted to build something that lasts forever, just like how I feel about you.\n\nYou are my code's missing semicolon—life just doesn't run right without you.\n\nLove always,\nYour Kabir 💖";
         function typeLetter() {
             const el = document.getElementById('typing-text'); el.innerHTML = ""; let i = 0; const speed = 50; 
